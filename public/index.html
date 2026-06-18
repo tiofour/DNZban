@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title-tab">Planet Ban Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <nav class="bg-red-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img id="logo-img" src="" alt="Logo" class="h-10 w-10 rounded-full object-cover bg-white">
+                <span id="site-title-nav" class="font-bold text-xl tracking-wider">Planet Ban Clone</span>
+            </div>
+            <div class="space-x-4 text-sm md:text-base">
+                <a href="#services" class="hover:underline">Layanan</a>
+                <a href="#tires" class="hover:underline">Katalog Ban</a>
+                <a href="#spareparts" class="hover:underline">Sparepart</a>
+                <a href="#contact" class="hover:underline">Kontak</a>
+                <a href="/dashboard.html" class="bg-yellow-400 text-red-900 px-3 py-1.5 md:px-4 md:py-2 rounded-md font-semibold hover:bg-yellow-300">Dashboard Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="hero-section" class="relative text-white py-32 text-center bg-cover bg-center">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90 z-10"></div>
+        
+        <div class="container mx-auto px-6 relative z-20">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Solusi Terbaik Untuk Ban & Motor Anda</h1>
+            <p class="text-lg text-red-100 drop-shadow-md">Layanan cepat, sparepart asli, dan harga transparan.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-10 space-y-20">
+        <section id="services">
+            <h2 class="text-3xl font-bold border-b-4 border-red-600 inline-block pb-2 mb-8">Layanan Kami</h2>
+            <div id="services-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+        <section id="tires">
+            <h2 class="text-3xl font-bold border-b-4 border-blue-600 inline-block pb-2 mb-8">Katalog Ban Ring & Premium</h2>
+            <div id="tires-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </section>
+
+        <section id="spareparts">
+            <h2 class="text-3xl font-bold border-b-4 border-orange-500 inline-block pb-2 mb-8">Suku Cadang & Sparepart Asli</h2>
+            <div id="spareparts-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </section>
+
+        <section id="contact" class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-8 rounded-lg shadow-md">
+            <div class="flex flex-col justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Hubungi & Kunjungi Kami</h2>
+                    <p class="mb-3"><strong>Alamat:</strong> <span id="info-address">-</span></p>
+                    <p class="mb-3"><strong>Email:</strong> <span id="info-email">-</span></p>
+                    <p class="mb-6"><strong>WhatsApp / No.HP:</strong> <span id="info-phone">-</span></p>
+                    <div class="mb-6 bg-gray-50 border p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-700 mb-2 flex items-center">🕒 Jam Operasional Bengkel</h4>
+                        <ul id="opening-hours-list" class="text-sm space-y-1 divide-y divide-gray-100"></ul>
+                    </div>
+                </div>
+                <a id="btn-wa" href="#" target="_blank" class="inline-block text-center bg-green-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:bg-green-600 transition">
+                    Chat via WhatsApp
+                </a>
+            </div>
+            <div>
+                <div class="w-full h-full min-h-[320px] rounded-lg overflow-hidden border border-gray-300">
+                    <iframe id="info-maps" src="" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 text-center mt-12">
+        <p>© 2026 <span id="footer-title"></span>. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let globalWhatsappPhone = '';
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchSettings().then(() => { fetchProductsAndSeparate(); });
+            fetchServices();
+            fetchOpeningHours();
+        });
+
+        function fetchSettings() {
+            return fetch('/api/settings')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('site-title-tab').innerText = data.site_title;
+                    document.getElementById('site-title-nav').innerText = data.site_title;
+                    document.getElementById('footer-title').innerText = data.site_title;
+                    document.getElementById('logo-img').src = data.logo_url || 'https://via.placeholder.com/150';
+                    document.getElementById('info-address').innerText = data.address;
+                    document.getElementById('info-email').innerText = data.email;
+                    document.getElementById('info-phone').innerText = data.phone;
+                    document.getElementById('info-maps').src = data.maps_iframe;
+                    
+                    let cleanPhone = data.phone.replace(/[^0-9]/g, '');
+                    if (cleanPhone.startsWith('0')) { cleanPhone = '62' + cleanPhone.substring(1); }
+                    globalWhatsappPhone = cleanPhone;
+                    document.getElementById('btn-wa').href = `https://wa.me/${globalWhatsappPhone}`;
+
+                    // RENDER GAMBAR BACKGROUND HERO UTAMA
+                    if(data.hero_image_url) {
+                        document.getElementById('hero-section').style.backgroundImage = `url('${data.hero_image_url}')`;
+                    }
+                });
+        }
+
+        function fetchOpeningHours() {
+            fetch('/api/opening-hours')
+                .then(res => res.json())
+                .then(data => {
+                    const list = document.getElementById('opening-hours-list');
+                    list.innerHTML = '';
+                    data.forEach(item => {
+                        const isClosed = item.hours.toLowerCase() === 'tutup';
+                        list.innerHTML += `
+                            <li class="flex justify-between py-1.5">
+                                <span class="font-medium text-gray-600">${item.day_name}</span>
+                                <span class="${isClosed ? 'text-red-600 font-bold' : 'text-gray-800 font-semibold'}">${item.hours}</span>
+                            </li>`;
+                    });
+                });
+        }
+
+        function fetchServices() {
+            fetch('/api/services')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('services-container');
+                    container.innerHTML = '';
+                    data.forEach(srv => {
+                        container.innerHTML += `
+                            <div class="bg-white p-4 rounded-lg shadow border flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                                <img src="${srv.image_url || 'https://via.placeholder.com/150'}" alt="${srv.name}" class="w-24 h-24 object-cover rounded-md border bg-gray-50 flex-shrink-0">
+                                <div>
+                                    <h3 class="text-xl font-bold mb-1 text-gray-900">${srv.name}</h3>
+                                    <p class="text-gray-600 text-sm mb-3">${srv.description}</p>
+                                    <span class="text-red-600 font-bold text-sm">Harga Jasa: Rp ${srv.price.toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>`;
+                    });
+                });
+        }
+
+        function fetchProductsAndSeparate() {
+            fetch('/api/products')
+                .then(res => res.json())
+                .then(data => {
+                    const tiresContainer = document.getElementById('tires-container');
+                    const sparepartsContainer = document.getElementById('spareparts-container');
+                    tiresContainer.innerHTML = ''; sparepartsContainer.innerHTML = '';
+
+                    data.forEach(prod => {
+                        const messageText = `Halo Admin, saya ingin menanyakan apakah stok barang ini ready di bengkel?\n\n*Nama Barang:* ${prod.name}\n*Harga:* Rp ${prod.price.toLocaleString('id-ID')}\n\nTerima kasih!`;
+                        const encodedMessage = encodeURIComponent(messageText);
+                        const waLink = `https://wa.me/${globalWhatsappPhone}?text=${encodedMessage}`;
+
+                        const cardHTML = `
+                            <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col justify-between border border-gray-100 hover:shadow-md transition">
+                                <img src="${prod.image_url || 'https://via.placeholder.com/300'}" alt="${prod.name}" class="w-full h-48 object-cover">
+                                <div class="p-4 flex flex-col flex-grow justify-between">
+                                    <div class="mb-3">
+                                        <h3 class="font-bold text-gray-900 mb-2 line-clamp-2 h-12 text-sm md:text-base">${prod.name}</h3>
+                                        <p class="text-red-600 font-extrabold text-base">Rp ${prod.price.toLocaleString('id-ID')}</p>
+                                    </div>
+                                    <a href="${waLink}" target="_blank" class="w-full bg-green-500 hover:bg-green-600 text-white text-center py-2 px-3 rounded font-bold text-xs md:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition">
+                                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 11.859 0c3.166.001 6.143 1.233 8.384 3.475C22.483 5.717 24 8.697 24 11.861c-.004 6.537-5.329 11.86-11.859 11.86-2.004-.001-3.973-.51-5.729-1.479L0 24zm6.59-4.846c1.665.989 3.3 1.503 4.936 1.504 5.428 0 9.845-4.414 9.848-9.842.002-2.63-1.023-5.101-2.885-6.964C16.627 2.016 14.153 1 11.86 1 6.43 1 2.014 5.414 2.012 10.84c0 1.696.449 3.351 1.3 4.821L2.33 21.17l5.652-1.482z"/></svg>
+                                        <span>Tanya Stok via WA</span>
+                                    </a>
+                                </div>
+                            </div>`;
+
+                        if (prod.category === 'ban') { tiresContainer.innerHTML += cardHTML; } 
+                        else if (prod.category === 'sparepart') { sparepartsContainer.innerHTML += cardHTML; }
+                    });
+                });
+        }
+    </script>
+</body>
+</html>

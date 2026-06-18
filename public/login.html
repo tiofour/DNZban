@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - Planet Ban</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <div class="text-center mb-6">
+            <h2 class="text-3xl font-bold text-red-600">Admin Bengkel</h2>
+            <p class="text-gray-500 text-sm">Silakan masuk untuk mengelola web profil</p>
+        </div>
+
+        <div id="error-msg" class="hidden bg-red-100 text-red-700 p-3 rounded mb-4 text-sm text-center"></div>
+
+        <form id="form-login" class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold mb-1 text-gray-600">Username</label>
+                <input type="text" id="username" class="w-full border p-2.5 rounded focus:outline-red-500" placeholder="Masukkan username" required>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1 text-gray-600">Password</label>
+                <input type="password" id="password" class="w-full border p-2.5 rounded focus:outline-red-500" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="w-full bg-red-600 text-white py-2.5 rounded font-bold hover:bg-red-500 transition shadow">
+                Masuk ke Dashboard
+            </button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <a href="/index.html" class="text-sm text-gray-500 hover:underline">← Kembali ke Beranda</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('form-login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: usernameInput, password: passwordInput })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Jika sukses, lempar ke halaman dashboard
+                    window.location.href = '/dashboard.html';
+                } else {
+                    // Tampilkan pesan error jika gagal
+                    errorMsg.innerText = data.message;
+                    errorMsg.classList.remove('hidden');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                errorMsg.innerText = "Terjadi gangguan pada server.";
+                errorMsg.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

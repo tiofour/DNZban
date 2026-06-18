@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Planet Ban Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 relative">
+
+    <div class="bg-gray-800 text-white py-4 px-6 shadow flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <h1 class="text-2xl font-bold">Dashboard Admin Web Profil</h1>
+            <span class="bg-green-600 px-2 py-0.5 rounded text-xs">Logged In as: <span id="admin-user-tag">Admin</span></span>
+        </div>
+        <div class="space-x-2">
+            <a href="/index.html" class="bg-gray-600 px-4 py-2 rounded text-sm hover:bg-gray-500">Lihat Web Profil</a>
+            <button id="btn-logout" class="bg-red-600 px-4 py-2 rounded text-sm hover:bg-red-500 font-semibold">Logout</button>
+        </div>
+    </div>
+
+    <div class="container mx-auto p-6 space-y-12">
+        <section class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">1. Pengaturan Web, Gambar & Kontak</h2>
+            <form id="form-settings" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold mb-1">Nama Profil Web</label>
+                    <input type="text" id="set-title" class="w-full border p-2 rounded" required>
+                </div>
+                <div class="bg-gray-50 p-4 border rounded">
+                    <label class="block text-sm font-semibold mb-1">Gambar Logo Toko <span class="text-xs text-red-500">(Max 500KB)</span></label>
+                    <input type="file" id="set-logo-file" accept="image/png, image/jpeg, image/webp" class="w-full border bg-white p-1.5 rounded mb-2">
+                    <input type="hidden" id="set-logo-url-old"> 
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-gray-500">Logo Saat Ini:</span>
+                        <img id="preview-logo-current" src="" class="h-10 w-10 object-cover rounded border bg-white">
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 border rounded">
+                    <label class="block text-sm font-semibold mb-1">Foto Latar (Background Hero) <span class="text-xs text-red-500">(Max 500KB)</span></label>
+                    <input type="file" id="set-hero-file" accept="image/png, image/jpeg, image/webp" class="w-full border bg-white p-1.5 rounded mb-2">
+                    <input type="hidden" id="set-hero-url-old"> 
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-gray-500">Background Saat Ini:</span>
+                        <img id="preview-hero-current" src="" class="h-10 w-24 object-cover rounded border bg-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Nomor WhatsApp</label>
+                    <input type="text" id="set-phone" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Email Toko</label>
+                    <input type="email" id="set-email" class="w-full border p-2 rounded" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold mb-1">Alamat Fisik</label>
+                    <textarea id="set-address" class="w-full border p-2 rounded" rows="2" required></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold mb-1">Embed URL Google Maps</label>
+                    <input type="text" id="set-maps" class="w-full border p-2 rounded" required>
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-500">Simpan Pengaturan Utama</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="bg-white p-6 rounded-lg shadow-md border-t-4 border-teal-600">
+            <h2 class="text-xl font-bold mb-4 text-teal-700 border-b pb-2">2. Pengaturan Jam Operasional Mingguan</h2>
+            <form id="form-opening-hours" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div id="inputs-schedules-container" class="md:col-span-2 lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                <div class="md:col-span-2 lg:col-span-4 pt-2">
+                    <button type="submit" class="bg-teal-600 text-white px-6 py-2 rounded font-bold hover:bg-teal-500">
+                        Simpan Jam Operasional
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md h-fit">
+                <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">3. Tambah Layanan Workshop</h2>
+                <form id="form-service" class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-semibold">Nama Layanan</label>
+                        <input type="text" id="srv-name" class="w-full border p-2 rounded" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Deskripsi</label>
+                        <textarea id="srv-desc" class="w-full border p-2 rounded" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Biaya (Rp)</label>
+                        <input type="number" id="srv-price" class="w-full border p-2 rounded" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Upload Gambar <span class="text-xs text-red-500">(Max 500KB)</span></label>
+                        <input type="file" id="srv-file" accept="image/png, image/jpeg, image/webp" class="w-full border p-1.5 rounded" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-500">Tambah</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">Daftar Layanan Aktual</h2>
+                <ul id="list-services" class="divide-y"></ul>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md h-fit border-t-4 border-blue-600">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 border-b pb-2">4. Tambah Item Ban Baru</h2>
+                <form id="form-product-tire" class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-semibold">Nama & Ukuran Ban</label>
+                        <input type="text" id="tire-name" class="w-full border p-2 rounded" placeholder="Contoh: Michelin Pilot 90/80-14" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Harga Ban (Rp)</label>
+                        <input type="number" id="tire-price" class="w-full border p-2 rounded" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Upload Foto Ban <span class="text-xs text-red-500">(Max 500KB)</span></label>
+                        <input type="file" id="tire-file" accept="image/png, image/jpeg, image/webp" class="w-full border p-1.5 rounded" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-500">Simpan ke Katalog Ban</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">Daftar Inventori Ban Aktual</h2>
+                <ul id="list-products-tires" class="divide-y"></ul>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md h-fit border-t-4 border-orange-500">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 border-b pb-2">5. Tambah Item Sparepart Baru</h2>
+                <form id="form-product-sparepart" class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-semibold">Nama Suku Cadang</label>
+                        <input type="text" id="spare-name" class="w-full border p-2 rounded" placeholder="Contoh: Kampas Rem Depan Vario" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Harga Komponen (Rp)</label>
+                        <input type="number" id="spare-price" class="w-full border p-2 rounded" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold">Upload Foto Komponen <span class="text-xs text-red-500">(Max 500KB)</span></label>
+                        <input type="file" id="spare-file" accept="image/png, image/jpeg, image/webp" class="w-full border p-1.5 rounded" required>
+                    </div>
+                    <button type="submit" class="w-full bg-orange-500 text-white py-2 rounded font-bold hover:bg-orange-600">Simpan ke Katalog Sparepart</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">Daftar Inventori Sparepart Aktual</h2>
+                <ul id="list-products-spareparts" class="divide-y"></ul>
+            </div>
+        </section>
+    </div>
+
+    <div id="modal-edit-service" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4 border-b pb-2">Edit Data Layanan</h3>
+            <form id="form-edit-service" class="space-y-3">
+                <input type="hidden" id="edit-srv-id">
+                <div>
+                    <label class="block text-sm font-semibold">Nama Layanan</label>
+                    <input type="text" id="edit-srv-name" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Deskripsi</label>
+                    <textarea id="edit-srv-desc" class="w-full border p-2 rounded" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Biaya (Rp)</label>
+                    <input type="number" id="edit-srv-price" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Ganti Gambar <span class="text-xs text-gray-400">(Max 500KB)</span></label>
+                    <input type="file" id="edit-srv-file" accept="image/png, image/jpeg, image/webp" class="w-full border p-1.5 rounded">
+                    <input type="hidden" id="edit-srv-image-old">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-edit-service')" class="bg-gray-400 text-white px-4 py-2 rounded">Batal</button>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded font-semibold">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-edit-product" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4 border-b pb-2">Edit Data Inventori</h3>
+            <form id="form-edit-product" class="space-y-3">
+                <input type="hidden" id="edit-prod-id">
+                <input type="hidden" id="edit-prod-category">
+                <div>
+                    <label class="block text-sm font-semibold">Nama Barang</label>
+                    <input type="text" id="edit-prod-name" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Harga Barang (Rp)</label>
+                    <input type="number" id="edit-prod-price" class="w-full border p-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold">Ganti Gambar <span class="text-xs text-gray-400">(Max 500KB)</span></label>
+                    <input type="file" id="edit-prod-file" accept="image/png, image/jpeg, image/webp" class="w-full border p-1.5 rounded">
+                    <input type="hidden" id="edit-prod-image-old">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-edit-product')" class="bg-gray-400 text-white px-4 py-2 rounded">Batal</button>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded font-semibold">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function checkFileSize(inputElement) {
+            if (inputElement.files.length > 0) {
+                const fileSize = inputElement.files[0].size / 1024;
+                if (fileSize > 500) {
+                    alert(`Ukuran file (${fileSize.toFixed(1)}KB) melebihi batas maksimal 500KB!`);
+                    inputElement.value = '';
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Bind input validators
+            document.getElementById('set-logo-file').addEventListener('change', function() { checkFileSize(this); });
+            document.getElementById('set-hero-file').addEventListener('change', function() { checkFileSize(this); });
+            document.getElementById('srv-file').addEventListener('change', function() { checkFileSize(this); });
+            document.getElementById('edit-srv-file').addEventListener('change', function() { checkFileSize(this); });
+            document.getElementById('tire-file').addEventListener('change', function() { checkFileSize(this); });
+            document.getElementById('spare-file').addEventListener('change', function() { checkFileSize(this); });
+            document.getElementById('edit-prod-file').addEventListener('change', function() { checkFileSize(this); });
+
+            // Session check
+            fetch('/api/check-session').then(res => res.json()).then(data => {
+                if (!data.loggedIn) window.location.href = '/login.html'; 
+                else {
+                    document.getElementById('admin-user-tag').innerText = data.username;
+                    loadSettings(); 
+                    loadServices(); 
+                    loadProductsAndSeparate();
+                    loadOpeningHoursDashboard(); // Panggil loader jam operasional
+                }
+            });
+
+            document.getElementById('btn-logout').addEventListener('click', () => {
+                if(confirm('Keluar dari dashboard?')) fetch('/api/logout').then(() => { window.location.href = '/login.html'; });
+            });
+
+            // Submit Settings
+            document.getElementById('form-settings').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                formData.append('site_title', document.getElementById('set-title').value);
+                formData.append('phone', document.getElementById('set-phone').value);
+                formData.append('email', document.getElementById('set-email').value);
+                formData.append('address', document.getElementById('set-address').value);
+                formData.append('maps_iframe', document.getElementById('set-maps').value);
+                formData.append('logo_url', document.getElementById('set-logo-url-old').value);
+                formData.append('hero_image_url', document.getElementById('set-hero-url-old').value);
+                
+                if(document.getElementById('set-logo-file').files[0]) formData.append('logo_file', document.getElementById('set-logo-file').files[0]);
+                if(document.getElementById('set-hero-file').files[0]) formData.append('hero_file', document.getElementById('set-hero-file').files[0]);
+
+                fetch('/api/settings', { method: 'PUT', body: formData }).then(res => res.json()).then(data => {
+                    if(data.error) alert(data.error); else { alert(data.message); loadSettings(); }
+                });
+            });
+
+            // SUBMIT DATA JAM OPERASIONAL (BARU)
+            document.getElementById('form-opening-hours').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+                const payload = {};
+                
+                dayNames.forEach(day => {
+                    payload[day] = document.getElementById(`hours-${day}`).value;
+                });
+
+                fetch('/api/opening-hours', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    loadOpeningHoursDashboard();
+                });
+            });
+
+            // Submit Service
+            document.getElementById('form-service').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                formData.append('name', document.getElementById('srv-name').value);
+                formData.append('description', document.getElementById('srv-desc').value);
+                formData.append('price', document.getElementById('srv-price').value);
+                if(document.getElementById('srv-file').files[0]) formData.append('service_file', document.getElementById('srv-file').files[0]);
+
+                fetch('/api/services', { method: 'POST', body: formData }).then(res => res.json()).then(data => {
+                    if(data.error) alert(data.error); else { loadServices(); document.getElementById('form-service').reset(); }
+                });
+            });
+
+            // Form Submit Ban
+            document.getElementById('form-product-tire').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                formData.append('name', document.getElementById('tire-name').value);
+                formData.append('category', 'ban');
+                formData.append('price', document.getElementById('tire-price').value);
+                if(document.getElementById('tire-file').files[0]) formData.append('product_file', document.getElementById('tire-file').files[0]);
+
+                fetch('/api/products', { method: 'POST', body: formData }).then(res => res.json()).then(data => {
+                    if(data.error) alert(data.error); else { loadProductsAndSeparate(); document.getElementById('form-product-tire').reset(); }
+                });
+            });
+
+            // Form Submit Sparepart
+            document.getElementById('form-product-sparepart').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                formData.append('name', document.getElementById('spare-name').value);
+                formData.append('category', 'sparepart');
+                formData.append('price', document.getElementById('spare-price').value);
+                if(document.getElementById('spare-file').files[0]) formData.append('product_file', document.getElementById('spare-file').files[0]);
+
+                fetch('/api/products', { method: 'POST', body: formData }).then(res => res.json()).then(data => {
+                    if(data.error) alert(data.error); else { loadProductsAndSeparate(); document.getElementById('form-product-sparepart').reset(); }
+                });
+            });
+
+            // Submit Edit Service
+            document.getElementById('form-edit-service').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-srv-id').value;
+                const formData = new FormData();
+                formData.append('name', document.getElementById('edit-srv-name').value);
+                formData.append('description', document.getElementById('edit-srv-desc').value);
+                formData.append('price', document.getElementById('edit-srv-price').value);
+                formData.append('image_url', document.getElementById('edit-srv-image-old').value);
+                if(document.getElementById('edit-srv-file').files[0]) formData.append('service_file', document.getElementById('edit-srv-file').files[0]);
+
+                fetch(`/api/services/${id}`, { method: 'PUT', body: formData }).then(res => res.json()).then(data => {
+                    if(data.error) alert(data.error); else { alert(data.message); closeModal('modal-edit-service'); loadServices(); }
+                });
+            });
+
+            // Submit Edit Produk
+            document.getElementById('form-edit-product').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-prod-id').value;
+                const formData = new FormData();
+                formData.append('name', document.getElementById('edit-prod-name').value);
+                formData.append('category', document.getElementById('edit-prod-category').value);
+                formData.append('price', document.getElementById('edit-prod-price').value);
+                formData.append('image_url', document.getElementById('edit-prod-image-old').value);
+                if(document.getElementById('edit-prod-file').files[0]) formData.append('product_file', document.getElementById('edit-prod-file').files[0]);
+
+                fetch(`/api/products/${id}`, { method: 'PUT', body: formData }).then(res => res.json()).then(data => {
+                    if (data.error) alert(data.error); else { alert(data.message); closeModal('modal-edit-product'); loadProductsAndSeparate(); }
+                });
+            });
+        });
+
+        // FUNGSI BARU: Render input form 7 hari kerja secara dinamis dan mengisi nilainya
+        function loadOpeningHoursDashboard() {
+            fetch('/api/opening-hours')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('inputs-schedules-container');
+                    container.innerHTML = '';
+                    data.forEach(item => {
+                        container.innerHTML += `
+                            <div class="flex flex-col border p-3 rounded bg-white shadow-sm">
+                                <label class="block text-sm font-bold text-gray-700 mb-1">${item.day_name}</label>
+                                <input type="text" id="hours-${item.day_name}" value="${item.hours}" class="w-full border p-2 rounded text-sm focus:outline-teal-500" placeholder="Contoh: 08.00 - 19.00 atau Tutup">
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        function loadSettings() {
+            fetch('/api/settings').then(res => res.json()).then(data => {
+                document.getElementById('set-title').value = data.site_title;
+                document.getElementById('set-phone').value = data.phone;
+                document.getElementById('set-email').value = data.email;
+                document.getElementById('set-address').value = data.address;
+                document.getElementById('set-maps').value = data.maps_iframe;
+                document.getElementById('set-logo-url-old').value = data.logo_url;
+                document.getElementById('preview-logo-current').src = data.logo_url || 'https://via.placeholder.com/150';
+                document.getElementById('set-hero-url-old').value = data.hero_image_url;
+                document.getElementById('preview-hero-current').src = data.hero_image_url || 'https://via.placeholder.com/1200x400';
+            });
+        }
+
+        function loadServices() {
+            fetch('/api/services').then(res => res.json()).then(data => {
+                const list = document.getElementById('list-services');
+                list.innerHTML = '';
+                data.forEach(s => {
+                    list.innerHTML += `<div class="py-3 flex justify-between items-center"><div class="flex items-center space-x-3"><img src="${s.image_url}" class="w-12 h-12 object-cover rounded border"><div><p class="font-bold text-gray-800">${s.name}</p><p class="text-sm text-red-600 font-semibold">Rp ${s.price.toLocaleString()}</p></div></div><div class="space-x-3"><button onclick="openEditServiceModal(${s.id})" class="text-blue-600 hover:underline">Edit</button><button onclick="deleteService(${s.id})" class="text-red-500 hover:underline">Hapus</button></div></div>`;
+                });
+            });
+        }
+
+        function openEditServiceModal(id) {
+            fetch(`/api/services/${id}`).then(res => res.json()).then(data => {
+                document.getElementById('edit-srv-id').value = data.id; document.getElementById('edit-srv-name').value = data.name; document.getElementById('edit-srv-desc').value = data.description; document.getElementById('edit-srv-price').value = data.price; document.getElementById('edit-srv-image-old').value = data.image_url; document.getElementById('modal-edit-service').classList.remove('hidden');
+            });
+        }
+
+        function deleteService(id) { if(confirm('Hapus layanan ini?')) fetch(`/api/services/${id}`, { method: 'DELETE' }).then(() => loadServices()); }
+
+        function loadProductsAndSeparate() {
+            fetch('/api/products').then(res => res.json()).then(data => {
+                const tiresList = document.getElementById('list-products-tires');
+                const sparepartsList = document.getElementById('list-products-spareparts');
+                tiresList.innerHTML = ''; sparepartsList.innerHTML = '';
+
+                data.forEach(p => {
+                    const rowHTML = `
+                        <div class="py-3 flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <img src="${p.image_url}" class="w-12 h-12 object-cover rounded border">
+                                <div>
+                                    <p class="font-bold text-gray-800">${p.name}</p>
+                                    <p class="text-sm text-red-600 font-semibold">Rp ${p.price.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="space-x-3">
+                                <button onclick="openEditProductModal(${p.id})" class="text-blue-600 hover:underline">Edit</button>
+                                <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:underline">Hapus</button>
+                            </div>
+                        </div>`;
+                    if (p.category === 'ban') tiresList.innerHTML += rowHTML;
+                    else if (p.category === 'sparepart') sparepartsList.innerHTML += rowHTML;
+                });
+            });
+        }
+
+        // Buka Modal Edit Produk Universal
+        function openEditProductModal(id) {
+            fetch(`/api/products/${id}`).then(res => res.json()).then(data => {
+                document.getElementById('edit-prod-id').value = data.id; 
+                document.getElementById('edit-prod-name').value = data.name; 
+                document.getElementById('edit-prod-category').value = data.category;
+                document.getElementById('edit-prod-price').value = data.price; 
+                document.getElementById('edit-prod-image-old').value = data.image_url; 
+                document.getElementById('modal-edit-product').classList.remove('hidden');
+            });
+        }
+
+        function deleteProduct(id) { if(confirm('Hapus produk ini?')) fetch(`/api/products/${id}`, { method: 'DELETE' }).then(() => loadProductsAndSeparate()); }
+        function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) modal.classList.add('hidden'); }
+    </script>
+</body>
+</html>
